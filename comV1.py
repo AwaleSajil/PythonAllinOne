@@ -3,7 +3,7 @@ import sys
 import serial
 import glob
 import struct
-# import time
+import time
 import numpy as np
 
 
@@ -62,7 +62,7 @@ class ReadFromArduino(object):
 
         self.port.flushInput()
 
-    def read_one_value(self):
+    def read_one_value(self, readData):
         """Wait for next serial message from the Arduino, and read the whole
         message as a structure."""
         read = False
@@ -85,6 +85,12 @@ class ReadFromArduino(object):
                     read = True
 
                     self.Data = np.array(unpacked_data)
+
+                    #transfer data from internal memory to shared memory
+                    readData[0] = self.Data[0]
+                    readData[1] = self.Data[1]
+                    readData[2] = self.Data[2]
+                    readData[3] = self.Data[3]
 
                     # if self.verbose > 1:
                         # print("Time elapsed since last (ms): " + str(time_elapsed))
@@ -128,7 +134,10 @@ class SendtoArduino(object):
 
 
 
-    def sendValue(self):
+    def sendValue(self, sendData):
+        #transfer data from shared memory to internal process memory
+        self.Data = sendData
+        #send the data to the arduino
         self.port.write(b'S')
         packed_data = struct.pack('>BBBB',self.Data[0], self.Data[1], self.Data[2], self.Data[3])
         self.port.write(packed_data)
@@ -151,32 +160,11 @@ class SendtoArduino(object):
     #     self.Data[3] = Val
     #     self.sendValue()
 
-# use is:
-# ports = serial_ports()
-# print(ports)
-# Arduino = serial.Serial(ports[0], baudrate=9600, timeout=0.5)
-# read_from_Arduino_instance = ReadFromArduino(Arduino, verbose=6)
-# send_to_Arduino_instance = SendtoArduino(Arduino, verbose=6)
-
-# while True:
-#     # read_from_Arduino_instance.read_one_value()
-#     # read_from_Arduino_instance.print_values()
-#     print("T:", read_from_Arduino_instance.getTemperature())
-#     print("H:", read_from_Arduino_instance.getHumidity())
-#     print("L:", read_from_Arduino_instance.getLDR())
-#     print("A:", read_from_Arduino_instance.getAmmonia())
-#     print("--------------------")
-
-#     send_to_Arduino_instance.sendValue()
-#     # send_to_Arduino_instance.setHeater(1)
-#     # send_to_Arduino_instance.setFan(2)
-#     # send_to_Arduino_instance.setLight(3)
-#     # send_to_Arduino_instance.setServo(4)
-#     time.sleep(0.5)
 
 
 
-def com():
+
+def com(sendData, readData):
     print("com Started")
     ports = serial_ports()
     print("Ports available: ", ports)
@@ -185,18 +173,18 @@ def com():
     send_to_Arduino_instance = SendtoArduino(Arduino, verbose=6)
 
     while True:
-        # time.sleep(1)
-        read_from_Arduino_instance.read_one_value()
-        send_to_Arduino_instance.sendValue()
+        time.sleep(1)
+        read_from_Arduino_instance.read_one_value(readData)
+        send_to_Arduino_instance.sendValue(sendData)
 
         #display the values
-        read_from_Arduino_instance.print_values()
+        # read_from_Arduino_instance.print_values()
 
 
 
 
 
 
-
-#testing this module only
-# com()
+if __name__ == "__main__":
+    #testing this module only
+    com()

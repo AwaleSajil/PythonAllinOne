@@ -99,8 +99,7 @@ def looop(stream, pc):
 
     elif (peak < avgThreshold[0]) :
         updatePeckStatus()
-    
-    return peckCount
+
 
  	
 
@@ -130,9 +129,9 @@ def peakCounter(pc):
 
 
 
-
-# #testing this module only
-# peakCounter(0)
+if __name__ == "__main__":
+    #testing this module only
+    peakCounter(0)
 
 
 
