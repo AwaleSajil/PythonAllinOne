@@ -87,10 +87,7 @@ class ReadFromArduino(object):
                     self.Data = np.array(unpacked_data)
 
                     #transfer data from internal memory to shared memory
-                    readData[0] = self.Data[0]
-                    readData[1] = self.Data[1]
-                    readData[2] = self.Data[2]
-                    readData[3] = self.Data[3]
+                    readData[:] = self.Data
 
                     # if self.verbose > 1:
                         # print("Time elapsed since last (ms): " + str(time_elapsed))

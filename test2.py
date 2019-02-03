@@ -1,7 +1,8 @@
 import time
 
 
-def printPeak(pc):
+def printPeak(soundAnalysis):
     for i in range(10000):
-        print(i , ": Peack count", pc.value)
-        time.sleep(0.01)
+        print(i , ": Peack count", soundAnalysis[0])
+        print(i , ": Weight Feed", soundAnalysis[1])
+        time.sleep(0.1)

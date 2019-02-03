@@ -14,6 +14,11 @@ peckCount = 0
 peckStatus  = 0
 #static variable for discrete counting of pecking // 0 if not pecking and 1 if peaking
 
+weightPerFeed = 0.025  #gram
+
+weightFeedCount = 0  #GRAMS
+
+
 def updatePeckStatus():
     global peckStatus
 
@@ -53,8 +58,8 @@ def getFFT(data,rate):
 
 
 
-def looop(stream, pc):
-    global CHUNK, avgThreshold, RATE, peckStatus, promThreshold, freqRange, peckCount
+def looop(stream, soundAnalysis):
+    global CHUNK, avgThreshold, RATE, peckStatus, promThreshold, freqRange, peckCount, weightPerFeed, weightFeedCount
 
     data = np.fromstring(stream.read(CHUNK),dtype=np.int16)
     peak=np.average(np.abs(data))*2
@@ -91,7 +96,9 @@ def looop(stream, pc):
             #if yes try to increment the peckCount
             if incORnot() == 1:
                 peckCount += 1
-                pc.value += 1
+                weightFeedCount = peckCount*weightPerFeed
+                soundAnalysis[0] += 1
+                soundAnalysis[1] = soundAnalysis[0]*weightPerFeed
                 print("Peck Count: ", peckCount)
 
         elif (higestProminancePeak[1] < promThreshold[0]):
@@ -114,14 +121,14 @@ def looop(stream, pc):
 # for i in range(int(10*44100/1024)): #go for a few seconds
 # 	looop()
 
-def peakCounter(pc):
+def peakCounter(soundAnalysis):
     p=pyaudio.PyAudio()
     stream=p.open(format=pyaudio.paInt16,channels=1,rate=RATE,input=True,
                   frames_per_buffer=CHUNK)
 
     print("Sound Analysis Stream Started")
     while True:
-        looop(stream, pc)
+        looop(stream, soundAnalysis)
 
     stream.stop_stream()
     stream.close()
@@ -131,7 +138,7 @@ def peakCounter(pc):
 
 if __name__ == "__main__":
     #testing this module only
-    peakCounter(0)
+    peakCounter([0,0])
 
 
 
