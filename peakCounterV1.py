@@ -7,10 +7,10 @@ from scipy import signal
 CHUNK = 1024*2
 RATE = 44100
 
-freqRange = [1200, 1600]
+freqRange = [700, 1600]
 avgThreshold = [600, 1100]    #[lower, upper]
 promThreshold = [6000, 22000]    #[lower, upper]
-# peckCount = 0
+peckCount = 0
 peckStatus  = 0
 #static variable for discrete counting of pecking // 0 if not pecking and 1 if peaking
 
@@ -53,8 +53,8 @@ def getFFT(data,rate):
 
 
 
-def looop(stream, peckCount):
-    global CHUNK, avgThreshold, RATE, peckStatus, promThreshold, freqRange
+def looop(stream, pc):
+    global CHUNK, avgThreshold, RATE, peckStatus, promThreshold, freqRange, peckCount
 
     data = np.fromstring(stream.read(CHUNK),dtype=np.int16)
     peak=np.average(np.abs(data))*2
@@ -91,7 +91,8 @@ def looop(stream, peckCount):
             #if yes try to increment the peckCount
             if incORnot() == 1:
                 peckCount += 1
-                # print("Peck Count: ", peckCount)
+                pc.value += 1
+                print("Peck Count: ", peckCount)
 
         elif (higestProminancePeak[1] < promThreshold[0]):
             updatePeckStatus()
@@ -114,14 +115,14 @@ def looop(stream, peckCount):
 # for i in range(int(10*44100/1024)): #go for a few seconds
 # 	looop()
 
-def peakCounter(peckCount):
+def peakCounter(pc):
     p=pyaudio.PyAudio()
     stream=p.open(format=pyaudio.paInt16,channels=1,rate=RATE,input=True,
                   frames_per_buffer=CHUNK)
 
     print("Sound Analysis Stream Started")
     while True:
-        peckCount = looop(stream, peckCount)
+        looop(stream, pc)
 
     stream.stop_stream()
     stream.close()
@@ -131,7 +132,7 @@ def peakCounter(peckCount):
 
 
 # #testing this module only
-peakCounter(0)
+# peakCounter(0)
 
 
 

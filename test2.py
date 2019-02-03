@@ -1,6 +1,7 @@
-# import time
+import time
 
 
-def printPeak(count):
-    while True:
-        print("Peack count", count)
+def printPeak(pc):
+    for i in range(10000):
+        print(i , ": Peack count", pc.value)
+        time.sleep(0.01)
