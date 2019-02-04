@@ -2,7 +2,7 @@ from flask import Flask, render_template
 from flask import request
 import random
 
-from test6 import *
+# from test6 import *
 
 #global reference variables from shared memory
 soundData = None 
@@ -14,11 +14,11 @@ getData = None
 #code to communication between the shared memory and the server
 #interface
 
-def getPeakCount():
+def getPeckCount():
     global soundData
-    return soundData[0]
+    return int(soundData[0])
 
-def getPeakFeed():
+def getPeckFeed():
     global soundData
     return soundData[1]
 
@@ -34,7 +34,7 @@ def getLDR():
     global getData
     return getData[2]
 
-def getgetAmmonia():
+def getAmmonia():
     global getData
     return getData[3]
 
@@ -76,13 +76,17 @@ def openORclose(x):
 
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    # x = getTemperature()
-    # y = getHumidity()
-    # z = getLDR()
-    x=random.randint(50,100)
-    y=random.randint(20,45)
-    z=random.randint(40,60)
-    texts=str(x)+" "+str(y)+" "+str(z)
+    x = getTemperature()
+    y = getHumidity()
+    z = getLDR()
+    w = getAmmonia()
+    u = getPeckCount()
+    v = getPeckFeed()
+    # x=random.randint(50,100)
+    # y=random.randint(20,45)
+    # z=random.randint(40,60)
+    # w =random.randint(20,30)
+    texts=str(x)+" "+str(y)+" "+str(z) + " " + str(w)+ " " + str(u)+ " " + str(v)
     return """{}""".format(texts)
 
 
@@ -91,7 +95,7 @@ def heaters():
     global heater
     if request.method=='POST':
         heater = request.get_data(as_text=True)
-        #setHeater(int(heater))
+        setHeater(int(heater))
         
     return """{} %""".format(heater)
     
@@ -101,7 +105,7 @@ def fans():
     global fan
     if request.method=='POST':
         fan = request.get_data(as_text=True)
-        #setFan(int(fan))
+        setFan(int(fan))
         fan=openORclose(fan)
 
     return """Fan is {}""".format(fan)
@@ -150,14 +154,14 @@ def flaskServer(soundAnalysis, sendData, readData):
     #tests here from test 6
     # displayreadData(getData,soundData)
 
-    changesendData(setData)
+    # changesendData(setData)
 
     
     ##create a server
     #app.run(host='0.0.0.0')
     #app.run(port=5555)
     #app.run(host='192.168.1.69', port=9000)
-    # app.run(host='192.168.1.7', port=9000)
+    app.run(host='192.168.1.12', port=9000)
 
 
 
