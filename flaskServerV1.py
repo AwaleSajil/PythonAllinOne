@@ -1,26 +1,49 @@
 from flask import Flask, render_template
 from flask import request
 import random
-from commu import *
+
+from test6 import *
+
+#global reference variables from shared memory
+soundData = None 
+setData = None
+getData = None
+
 
 
 #code to communication between the shared memory and the server
+#interface
+
+def getPeakCount():
+    return soundData[0]
+
+def getPeakFeed():
+    return soundData[1]
 
 def getTemperature():
+    return getData[0]
 
+def getHumidity():
+    return getData[1]
 
+def getLDR():
+    return getData[2]
 
+def getgetAmmonia():
+    return getData[3]
 
+def setHeater(hValue):
+    setData[0] = hValue
 
+def setFan(fValue):
+    setData[1] = fValue
 
+def setLight(lValue):
+    setData[2] = lValue
 
+def setServo(sValue):
+    setData[3] = sValue
 
-#arduino side code
-ports = serial_ports()
-print(ports)
-Arduino = serial.Serial(ports[0], baudrate=9600, timeout=0.5)
-read_from_Arduino_instance = ReadFromArduino(Arduino, verbose=6)
-send_to_Arduino_instance = SendtoArduino(Arduino, verbose=6)
 
 heater=str()
 fan=str()
@@ -43,9 +66,9 @@ def openORclose(x):
 
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    # x=read_from_Arduino_instance.getTemperature()
-    # y=read_from_Arduino_instance.getHumidity()
-    # z=read_from_Arduino_instance.getLDR()
+    # x = getTemperature()
+    # y = getHumidity()
+    # z = getLDR()
     x=random.randint(50,100)
     y=random.randint(20,45)
     z=random.randint(40,60)
@@ -58,7 +81,7 @@ def heaters():
     global heater
     if request.method=='POST':
         heater = request.get_data(as_text=True)
-        #send_to_Arduino_instance.setHeater(int(heater))
+        #setHeater(int(heater))
         
     return """{} %""".format(heater)
     
@@ -68,7 +91,7 @@ def fans():
     global fan
     if request.method=='POST':
         fan = request.get_data(as_text=True)
-        #send_to_Arduino_instance.setFan(int(fan))
+        #setFan(int(fan))
         fan=openORclose(fan)
 
     return """Fan is {}""".format(fan)
@@ -79,7 +102,7 @@ def lights():
     global light
     if request.method=='POST':
         light = request.get_data(as_text=True)
-        send_to_Arduino_instance.setLight(int(light))
+        setLight(int(light))
         light=openORclose(light)
 
     return """Light is {}""".format(light)
@@ -89,7 +112,7 @@ def servos():
     global servo
     if request.method=='POST':
         servo = request.get_data(as_text=True)
-        send_to_Arduino_instance.setServo(int(servo))
+        setServo(int(servo))
         servo=openORclose(servo)
 
 
@@ -105,8 +128,20 @@ def autos():
     return"""automatic mode {}""".format(autoState)
 
 
-def flaskServer():
-    app.run(host='192.168.1.7', port=9000)
+def flaskServer(soundAnalysis, sendData, readData):
+    global soundData, setData, getData
+    soundData = soundAnalysis
+    setData = sendData
+    getData = readData
+
+
+    displayreadData(getData)
+    
+    ##create a server
+    #app.run(host='0.0.0.0')
+    #app.run(port=5555)
+    #app.run(host='192.168.1.69', port=9000)
+    # app.run(host='192.168.1.7', port=9000)
 
 
 
