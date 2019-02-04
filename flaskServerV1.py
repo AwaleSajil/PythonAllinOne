@@ -15,33 +15,43 @@ getData = None
 #interface
 
 def getPeakCount():
+    global soundData
     return soundData[0]
 
 def getPeakFeed():
+    global soundData
     return soundData[1]
 
 def getTemperature():
+    global getData
     return getData[0]
 
 def getHumidity():
+    global getData
     return getData[1]
 
 def getLDR():
+    global getData
     return getData[2]
 
 def getgetAmmonia():
+    global getData
     return getData[3]
 
 def setHeater(hValue):
+    global setData
     setData[0] = hValue
 
 def setFan(fValue):
+    global setData
     setData[1] = fValue
 
 def setLight(lValue):
+    global setData
     setData[2] = lValue
 
 def setServo(sValue):
+    global setData
     setData[3] = sValue
 
 
@@ -135,7 +145,13 @@ def flaskServer(soundAnalysis, sendData, readData):
     getData = readData
 
 
-    displayreadData(getData)
+
+
+    #tests here from test 6
+    # displayreadData(getData,soundData)
+
+    changesendData(setData)
+
     
     ##create a server
     #app.run(host='0.0.0.0')

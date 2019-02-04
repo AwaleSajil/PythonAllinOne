@@ -29,7 +29,7 @@ if __name__ == "__main__":
 
     p3 = multiprocessing.Process(target=flaskServer, args=(soundAnalysis, sendData, readData, ))
 
-    p4 = multiprocessing.Process(target=changeReadData, args=(readData, ))
+    p4 = multiprocessing.Process(target=displaysendData, args=(sendData,))
 
 
 
