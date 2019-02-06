@@ -91,11 +91,13 @@ def index():
     w = getAmmonia()
     u = getPeckCount()
     v = getPeckFeed()
+    s = getDistributionIndex()
+    t = getMobilityIndex()
     # x=random.randint(50,100)
     # y=random.randint(20,45)
     # z=random.randint(40,60)
     # w =random.randint(20,30)
-    texts=str(x)+" "+str(y)+" "+str(z) + " " + str(w)+ " " + str(u)+ " " + str(v)
+    texts=str(x)+" "+str(y)+" "+str(z) + " " + str(w)+ " " + str(u)+ " " + str(v)+ " " + str(s)+ " " + str(t)
     return """{}""".format(texts)
 
 
