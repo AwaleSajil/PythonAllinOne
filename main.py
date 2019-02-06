@@ -28,12 +28,12 @@ if __name__ == "__main__":
     imageAnalysis = multiprocessing.Array('d', 2)
 
 
-    p1 = multiprocessing.Process(target=peakCounter, args=(soundAnalysis,))
-    p2 = multiprocessing.Process(target=com, args=(sendData,readData,))
+    p1 = multiprocessing.Process(target=peakCounter, args=(soundAnalysis, ))
+    p2 = multiprocessing.Process(target=com, args=(sendData,readData,imageAnalysis, soundAnalysis,))
 
     p3 = multiprocessing.Process(target=flaskServer, args=(soundAnalysis, sendData, readData, imageAnalysis, ))
 
-    p4 = multiprocessing.Process(target=rskIndex, args=(imageAnalysis,))
+    # p4 = multiprocessing.Process(target=rskIndex, args=(imageAnalysis,))
 
 
 

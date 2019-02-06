@@ -87,8 +87,8 @@ def openORclose(x):
 def index():
     x = getTemperature()
     y = getHumidity()
-    z = getLDR()
-    w = getAmmonia()
+    z = int((getLDR())/(1023)*100)
+    w = int((getAmmonia())/(1023)*100)
     u = getPeckCount()
     v = getPeckFeed()
     s = getDistributionIndex()

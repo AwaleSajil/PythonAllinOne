@@ -131,37 +131,30 @@ class SendtoArduino(object):
 
 
 
-    def sendValue(self, sendData):
+    def sendValue(self, sendData, imageData, soundData):
         #transfer data from shared memory to internal process memory
         self.Data = sendData
         #send the data to the arduino
         self.port.write(b'S')
-        packed_data = struct.pack('>BBBB',self.Data[0], self.Data[1], self.Data[2], self.Data[3])
+        packed_data = struct.pack('>BBBBBBB',self.Data[0], self.Data[1], self.Data[2], self.Data[3], int(imageData[0]*255), int(imageData[1]*255), int(soundData[0]))
         self.port.write(packed_data)
         self.port.write(b'E')
 
-
-    # def setHeater(self, Val):
-    #     self.Data[0] = Val
-    #     self.sendValue()
-
-    # def setFan(self, Val):
-    #     self.Data[1] = Val
-    #     self.sendValue()
-
-    # def setLight(self, Val):
-    #     self.Data[2] = Val
-    #     self.sendValue()
-
-    # def setServo(self, Val):
-    #     self.Data[3] = Val
-    #     self.sendValue()
+        # Sending data sequence is like
+        # 'S'
+        # Heater  --> 0 to 100
+        # Fan     --> 0 or 1
+        # Light   --> 0 or 1
+        # Servo   --> 0 or 1
+        # distributionIndex   --> 0 to 255
+        # mobilityIndex       --> 0 to 255
+        # peakCount           --> 0 to 255
+        # 'E'
 
 
 
 
-
-def com(sendData, readData):
+def com(sendData, readData, imageData, soundData):
     print("com Started")
     ports = serial_ports()
     print("Ports available: ", ports)
@@ -172,7 +165,7 @@ def com(sendData, readData):
     while True:
         time.sleep(1)
         read_from_Arduino_instance.read_one_value(readData)
-        send_to_Arduino_instance.sendValue(sendData)
+        send_to_Arduino_instance.sendValue(sendData, imageData, soundData)
 
         #display the values
         # read_from_Arduino_instance.print_values()
@@ -184,4 +177,4 @@ def com(sendData, readData):
 
 if __name__ == "__main__":
     #testing this module only
-    com()
+    com([1,2,3,4], [5,6,7,8], [0.1,0.2], [100.0, 200.0])
