@@ -23,13 +23,17 @@ if __name__ == "__main__":
     #for receving data from arduino
     readData = multiprocessing.Array('i', 4)
 
+    #create an float array of size 2
+    #for receiving distribution index and mobility index
+    imageAnalysis = multiprocessing.Array('d', 2)
+
 
     p1 = multiprocessing.Process(target=peakCounter, args=(soundAnalysis,))
     p2 = multiprocessing.Process(target=com, args=(sendData,readData,))
 
-    p3 = multiprocessing.Process(target=flaskServer, args=(soundAnalysis, sendData, readData, ))
+    p3 = multiprocessing.Process(target=flaskServer, args=(soundAnalysis, sendData, readData, imageAnalysis, ))
 
-    # p4 = multiprocessing.Process(target=displaysendData, args=(sendData,))
+    p4 = multiprocessing.Process(target=rskIndex, args=(imageAnalysis,))
 
 
 

@@ -8,6 +8,7 @@ import random
 soundData = None 
 setData = None
 getData = None
+imageData = None
 
 
 
@@ -53,6 +54,14 @@ def setLight(lValue):
 def setServo(sValue):
     global setData
     setData[3] = sValue
+
+def getDistributionIndex():
+    global imageData
+    return imageData[0]
+
+def getMobilityIndex():
+    global imageData
+    return imageData[1]
 
 
 heater=str()
@@ -142,12 +151,12 @@ def autos():
     return"""automatic mode {}""".format(autoState)
 
 
-def flaskServer(soundAnalysis, sendData, readData):
-    global soundData, setData, getData
+def flaskServer(soundAnalysis, sendData, readData, imageAnalysis):
+    global soundData, setData, getData, imageData
     soundData = soundAnalysis
     setData = sendData
     getData = readData
-
+    imageData = imageAnalysis
 
 
 
