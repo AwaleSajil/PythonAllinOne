@@ -125,7 +125,7 @@ def looop(stream, soundAnalysis):
 def peakCounter(soundAnalysis):
     p=pyaudio.PyAudio()
     stream=p.open(format=pyaudio.paInt16,channels=1,rate=RATE,input=True,
-                  frames_per_buffer=CHUNK, input_device_index = 2)
+                  frames_per_buffer=CHUNK)
 
     print("Sound Analysis Stream Started")
     while True:

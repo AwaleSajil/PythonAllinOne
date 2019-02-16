@@ -55,6 +55,10 @@ def setServo(sValue):
     global setData
     setData[3] = sValue
 
+def setAutoControl(aValue):
+    global setData
+    setData[4] = aValue
+
 def getDistributionIndex():
     global imageData
     return imageData[0]
@@ -141,16 +145,17 @@ def servos():
         servo=openORclose(servo)
 
 
-    return """Servo is {}""".format(servo)
+    return """Ventilation is {}""".format(servo)
 
 
 @app.route('/auto', methods=['GET','POST'])
 def autos():
     global autostate
     if request.method=='POST':
-        autoState = request.get_data(as_text=True)
+        autostate = request.get_data(as_text=True)
+        setAutoControl(int(autostate))
 
-    return"""automatic mode {}""".format(autoState)
+    return"""automatic mode {}""".format(autostate)
 
 
 def flaskServer(soundAnalysis, sendData, readData, imageAnalysis):
@@ -172,7 +177,9 @@ def flaskServer(soundAnalysis, sendData, readData, imageAnalysis):
     #app.run(host='0.0.0.0')
     #app.run(port=5555)
     #app.run(host='192.168.1.69', port=9000)
-    app.run(host='192.168.1.12', port=9000)
+    app.run(host='192.168.43.224', port=9000)
+    #app.run(host='10.100.0.152', port=9000)
+
 
 
 
@@ -187,7 +194,7 @@ if __name__=="__main__":
     #app.run(host='0.0.0.0')
     #app.run(port=5555)
     #app.run(host='192.168.1.69', port=9000)
-    app.run(host='192.168.1.7', port=9000)
+    app.run(host='192.168.43.7', port=9000)
 
 
 

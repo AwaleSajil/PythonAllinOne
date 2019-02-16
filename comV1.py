@@ -123,11 +123,11 @@ class ReadFromArduino(object):
 
 
 class SendtoArduino(object):
-    def __init__(self, port, SIZE_STRUCT = 4, verbose=0):
+    def __init__(self, port, SIZE_STRUCT = 5, verbose=0):
         self.port = port
         self.SIZE_STRUCT = SIZE_STRUCT
         self.verbose = verbose
-        self.Data = np.array([4,3,2,1])
+        self.Data = np.array([-1,-1,-1,-1,-1])
 
 
 
@@ -136,7 +136,7 @@ class SendtoArduino(object):
         self.Data = sendData
         #send the data to the arduino
         self.port.write(b'S')
-        packed_data = struct.pack('>BBBBBBB',self.Data[0], self.Data[1], self.Data[2], self.Data[3], int(imageData[0]*255), int(imageData[1]*255), int(soundData[0]))
+        packed_data = struct.pack('>BBBBBBBB',self.Data[0], self.Data[1], self.Data[2], self.Data[3], int(imageData[0]*255), int(imageData[1]*255), int(soundData[0]), self.Data[4])
         self.port.write(packed_data)
         self.port.write(b'E')
 
@@ -149,6 +149,7 @@ class SendtoArduino(object):
         # distributionIndex   --> 0 to 255
         # mobilityIndex       --> 0 to 255
         # peakCount           --> 0 to 255
+        #auto state            --> 0 or 1 
         # 'E'
 
 
